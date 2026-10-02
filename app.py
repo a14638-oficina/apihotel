@@ -21,6 +21,11 @@ class Hotel(Resource):
                 return hotel
         return  { "mensagem": "Hotel não foi encontrado"}
 
+    def delete(self,hotel_id):
+        global hoteis
+        hoteis = [hotel for hotel in hoteis if hotel["hotel_id"] != hotel_id]
+        return hoteis
+
 api.add_resource(Hoteis,"/hoteis")
 api.add_resource(Hotel, "/hoteis/<string:hotel_id>")
 
