@@ -33,11 +33,11 @@ class Hotel(Resource):
     def post(self, hotel_id):
         dados = Hotel.argumentos.parse_args() #dados é um dicionário
 
-        hotel = self.encontrar_hotel(hotel_id)
-        if hotel is not None:
-            return { "mensagem": f"O hotel com id {hotel_id} já existe na lista"}
+        if hotelModel.find_hotel(hotel_id):
+            return{ "mensagem ": f"O hotel com id {hotel_id} já existe na minha lista"}
 
-        novo_hotel = {"hotel_id": hotel_id, **dados}
+        novo_hotel = hotelModel(hotel_id, **dados).json()
+        novo_hotel.save_hotel()
 
         hoteis.append(novo_hotel)
         return novo_hotel,200
@@ -51,9 +51,10 @@ class Hotel(Resource):
             hotel.update(dados)
             return hotel,200
 
-        novo_hotel = {"hotel_id": hotel_id, **dados}
+        novo_hotel = hotelModel(hotel_id, **dados).json()
 
         #Se o hotel ID não existir        
+        
         hoteis.append(novo_hotel)
         return novo_hotel,201
 
