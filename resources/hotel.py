@@ -9,7 +9,7 @@ hoteis = [
 
 class Hoteis(Resource):
     def get(self):
-        return {"hoteis": hoteis}
+        return {"hoteis": [hotel.json() for hotel in hotelModel.query.all()]}
 
 class Hotel(Resource):
     argumentos = reqparse.RequestParser()
@@ -17,48 +17,54 @@ class Hotel(Resource):
     argumentos.add_argument("estrelas",type=float, required = True, help="As estrelas do hotel são obrigatório")
     argumentos.add_argument("diaria",type=float, required = True, help="A diaria do hotel é obrigatória")
     argumentos.add_argument("cidade",type=str, required = True, help="A cidade do hotel é obrigatório")
-
-    def encontrar_hotel(self,hotel_id):
-        for hotel in hoteis:
-            if hotel["hotel_id"] == hotel_id:
-                return hotel
-        return None #Cuidado com identação
     
     def get(self, hotel_id):
-        hotel = self.encontrar_hotel(hotel_id)
+        hotel = hotelModel.find_hotel(hotel_id) #Devolve o hotel ou devolve None
         if hotel is not None:
-                return hotel, 200
+                return hotel.json(), 200
         return  { "mensagem": "Hotel não foi encontrado"}
 
     def post(self, hotel_id):
         dados = Hotel.argumentos.parse_args() #dados é um dicionário
+        hotel = hotelModel.find_hotel(hotel_id)
 
-        if hotelModel.find_hotel(hotel_id):
-            return{ "mensagem ": f"O hotel com id {hotel_id} já existe na minha lista"}
+        novo_hotel = hotelModel(hotel_id, **dados)
 
-        novo_hotel = hotelModel(hotel_id, **dados).json()
-        novo_hotel.save_hotel()
-
-        hoteis.append(novo_hotel)
-        return novo_hotel,200
+        try:
+            novo_hotel.save_hotel()
+            return hotel.json(),200
+        except:
+            return {"Mensagem": "Um erro interno do servidor aconteceu ..."},500
+        
 
     def put(self, hotel_id):
         dados = Hotel.argumentos.parse_args() #dados é um dicionário
-
-        #Se o hotel ID existe
-        hotel = self.encontrar_hotel(hotel_id)
-        if hotel is not None:
-            hotel.update(dados)
-            return hotel,200
-
-        novo_hotel = hotelModel(hotel_id, **dados).json()
-
-        #Se o hotel ID não existir        
         
-        hoteis.append(novo_hotel)
-        return novo_hotel,201
+        #Se o hotel ID existe
+        hotel = hotelModel.find_hotel(hotel_id)
+        if hotel is not None:
+            hotel.update_hotel(dados)
+            return hotel.json(),200
+
+        novo_hotel = hotelModel(hotel_id, **dados)
+
+        #Se o hotel ID não existir
+        try:
+            hotel.update_hotel(*dados)
+            hotel.save_hotel()
+            return hotel.json(),200
+        except:
+            return {"Mensagem": "Um erro interno do servidor aconteceu ..."},500
 
     def delete(self,hotel_id):
-        global hoteis
-        hoteis = [hotel for hotel in hoteis if hotel["hotel_id"] != hotel_id]
-        return hoteis
+        dados = Hotel.argumentos.parse_args() #dados é um dicionário
+        novo_hotel = hotelModel(hotel_id, **dados)
+
+        hotel = hotelModel.find_hotel(hotel_id)
+        if hotel is not None:
+            try:
+                novo_hotel.delete_hotel()
+                return hotel.json(),200
+            except:
+                return {"Mensagem": "Um erro interno do servidor aconteceu ..."},500
+        return {"Mensagem": "Hotel não encontrado"},404

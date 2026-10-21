@@ -3,6 +3,8 @@ from flask import Flask
 from flask_restful import Api
 from resources.hotel import Hoteis, Hotel
 from con_sql_alchemy import bd
+from resources.user import user
+from resources.user import userRegister
 
 app = Flask(__name__)
 api = Api(app)
@@ -15,6 +17,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 api.add_resource(Hoteis,"/hoteis")
 api.add_resource(Hotel, "/hoteis/<string:hotel_id>")
+api.add_resource(user, "/users/<string:username>")
+api.add_resource(userRegister,"/registar")
 
 if __name__ == "__main__":
     bd.init_app(app)
