@@ -1,5 +1,6 @@
 from flask_restful import Resource,reqparse
 from models.user import UserModel
+from hmac import compare_digest
 
 class user(Resource):  
     def get(self, username):
@@ -21,9 +22,9 @@ class user(Resource):
 class userRegister(Resource):
     argumentos = reqparse.RequestParser()
     argumentos.add_argument("username",type=str, required = True, help="O username é obrigatório")
-    argumentos.add_argument("password",type=float, required = True, help="A password é obrigatório")
+    argumentos.add_argument("password",type=str, required = True, help="A password é obrigatório")
 
-    def post():
+    def post(self):
         dados = userRegister.argumentos.parse_args()
         if UserModel.find_user(dados["username"]):
             return{"mensagem": "Utilizador com este username já existente"},400
@@ -33,3 +34,11 @@ class userRegister(Resource):
             return {"mensagem": "Utilizador criado com sucesso"},200
         except:
             return {"mensagem": "Ocorreu um erro interno"},500
+
+class userLogin(Resource):
+    argumentos = reqparse.RequestParser()
+    argumentos.add_argument("username",type=str, required = True, help="O username é obrigatório")
+    argumentos.add_argument("password",type=str, required = True, help="A password é obrigatório")
+
+    def post(self):
+        ...

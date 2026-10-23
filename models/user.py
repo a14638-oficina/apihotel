@@ -2,7 +2,7 @@ from con_sql_alchemy import bd
 
 class UserModel(bd.Model):
     __tablename__ = "utilizadores"
-    user_id = bd.Column(bd.String, primary_key = True)
+    user_id = bd.Column(bd.Integer, primary_key = True, autoincrement=True)
     username = bd.Column(bd.String(40))
     password = bd.Column(bd.String(40))
 
@@ -18,7 +18,7 @@ class UserModel(bd.Model):
 
     @classmethod
     def find_user(cls,username):
-        username = cls.query.filter.by(username = username).first() #Sem o first() devolve uma lista, com o first() devolve diretamente a instância do hotel
+        user = cls.query.filter_by(username = username).first() #Sem o first() devolve uma lista, com o first() devolve diretamente a instância do hotel
         #SELECT * FROM hoteis WHERE hotel_id = hotel_id LIMIT 1
         if user:
             return user

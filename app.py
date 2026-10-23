@@ -3,8 +3,7 @@ from flask import Flask
 from flask_restful import Api
 from resources.hotel import Hoteis, Hotel
 from con_sql_alchemy import bd
-from resources.user import user
-from resources.user import userRegister
+from resources.user import user,userRegister
 
 app = Flask(__name__)
 api = Api(app)
