@@ -5,16 +5,20 @@ meta {
 }
 
 post {
-  url: http://127.0.0.1:5000/hoteis/water
+  url: http://127.0.0.1:5000/hoteis/water2
   body: json
   auth: none
 }
 
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc5MzE4MjY5MywianRpIjoiMDIyZjJjOGEtMjg3Mi00NTE5LTlhMWMtNWVhMGQxMGMxMjVhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImFkbWluIiwibmJmIjoxNzkzMTgyNjkzLCJjc3JmIjoiNDBhOWZhOTktZTdkOC00OTRhLTkyZDUtNzU5ODdhMDA1NmE2IiwiZXhwIjoxNzkzMTgzNTkzfQ.6Jf_I8T_YipWeiBtPL0zfSo7M4l2gjkVQ3WCH1M49Jg
+}
+
 body:json {
   {
-    "nome": "Waterfall Resort Beach",
-    "estrelas": 4.8,
-    "diaria": 217.99,
-    "cidade" : "Lisboa"
+    "nome": "Waterfall Bench",
+    "estrelas": 4.3,
+    "diaria": 185.60,
+    "cidade" : "Londres"
   }
 }

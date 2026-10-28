@@ -1,6 +1,7 @@
 from flask_restful import Resource,reqparse
 from models.user import UserModel
 from hmac import compare_digest
+from flask_jwt_extended import create_access_token
 
 class user(Resource):  
     def get(self, username):
@@ -41,4 +42,10 @@ class userLogin(Resource):
     argumentos.add_argument("password",type=str, required = True, help="A password é obrigatório")
 
     def post(self):
-        ...
+        dados = userLogin.argumentos.parse_args()
+        user = UserModel.find_user(dados["username"])
+
+        if user and compare_digest(user.password, dados["password"]):
+            token = create_access_token(identity=user.username)
+            return {"access token": token}, 200
+        return {"mensagem": "O utilizador ou password está incorreto"}, 401
