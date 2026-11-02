@@ -9,8 +9,18 @@ hoteis = [
 ]
 
 class Hoteis(Resource):
+    parametros = reqparse.RequestParser() # Seleciona todos os dados passados na url
+    parametros.add_argument("cidade", type=str, default="", location="args")
+    parametros.add_argument("estrelas_min", type=float, default=0, location="args")
+    parametros.add_argument("estrelas_max", type=float, default=0, location="args")
+    parametros.add_argument("diaria_min", type=float, default=0, location="args")
+    parametros.add_argument("diaria_max", type=float, default=0, location="args")
+    parametros.add_argument("itens", type=int, default=5, location="args")
+    parametros.add_argument("pagina", type=int, default=1, location="args")
+    # Buscar
     def get(self):
-        return {"hoteis": [hotel.json() for hotel in hotelModel.query.all()]}
+        meus_filtros = Hoteis.parametros.parse_args()
+        query = hotelModel.query # Pesquisar por ... na tabela que hotelModel representa
 
 class Hotel(Resource):
     argumentos = reqparse.RequestParser()

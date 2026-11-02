@@ -1,7 +1,8 @@
 from flask_restful import Resource,reqparse
 from models.user import UserModel
 from hmac import compare_digest
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt
+from blocklist import BLOCKLIST
 
 class user(Resource):  
     def get(self, username):
@@ -49,3 +50,12 @@ class userLogin(Resource):
             token = create_access_token(identity=user.username)
             return {"access token": token}, 200
         return {"mensagem": "O utilizador ou password está incorreto"}, 401
+
+class userLogout(Resource):
+    @jwt_required
+    def post(self):
+        # Pegar o meu token e invalidar o mesmo
+        jwt_id = get_jwt()["jti"] # Obter p identificador do token
+        # Anexar este identificador a minha lista de token revogados
+        BLOCKLIST.add(jwt_id) # Adicionar a minha lista de tokens inválidos o atual
+        return { "mensagem": "Logout do user efetuado com sucesso"}
