@@ -6,6 +6,7 @@ from con_sql_alchemy import bd
 from resources.user import user,userRegister,userLogin, userLogout
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
+from blocklist import BLOCKLIST
 
 app = Flask(__name__)
 api = Api(app)
@@ -16,7 +17,7 @@ jwt = JWTManager(app) #Inicializa o JWT para tratar da autenticação das págin
 #Foi utilizada agora por ser apenas um teste
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///hoteis.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["JWT_SECRET_KEY"] = "my_secret_long_key_very_secret"
+app.config["JWT_SECRET_KEY"] = "my_secret_long_key_very_secret_aaaaaaa_bbbbb"
 app.config["JWT_BLACKLIST_ENABLE"] = True # Habilita a lista de tokens JWT inválidos
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=10)
 

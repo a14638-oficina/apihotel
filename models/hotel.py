@@ -26,7 +26,7 @@ class hotelModel(bd.Model):
 
     @classmethod
     def find_hotel(cls,hotel_id):
-        hotel = cls.query.filter.by(hotel_id = hotel_id).first() #Sem o first() devolve uma lista, com o first() devolve diretamente a instância do hotel
+        hotel = cls.query.filter_by(hotel_id = hotel_id).first() #Sem o first() devolve uma lista, com o first() devolve diretamente a instância do hotel
         #SELECT * FROM hoteis WHERE hotel_id = hotel_id LIMIT 1
         if hotel:
             return hotel
